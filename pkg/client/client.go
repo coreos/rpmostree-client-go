@@ -8,11 +8,12 @@ import (
 	"github.com/containers/image/v5/docker/reference"
 )
 
-// Status houses zero or more RpmOstreeDeployments
-// Subset of `rpm-ostree status --json`
-// https://github.com/projectatomic/rpm-ostree/blob/bce966a9812df141d38e3290f845171ec745aa4e/src/daemon/rpmostreed-deployment-utils.c#L227
+// Status summarizes the current worldview of the rpm-ostree daemon.
+// The deployment list is the primary data.
 type Status struct {
+	// Deployments is the list of bootable filesystem trees.
 	Deployments []Deployment
+	// Transaction is the active transaction, if any.
 	Transaction *[]string
 }
 
@@ -32,11 +33,14 @@ type Deployment struct {
 	ContainerImageReference string   `json:"container-image-reference"`
 }
 
+// Client is a handle for interacting with an rpm-ostree based system.
 type Client struct {
 	clientid string
 }
 
-// NewClient creates a new rpm-ostree client.
+// NewClient creates a new rpm-ostree client.  The client identifier should be a short, unique and ideally machine-readable string.
+// This could be as simple as `examplecorp-management-agent`.
+// If you want to be more verbose, you could use a URL, e.g. `https://gitlab.com/examplecorp/management-agent`.
 func NewClient(id string) Client {
 	return Client{
 		clientid: id,
