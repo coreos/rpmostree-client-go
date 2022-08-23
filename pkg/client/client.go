@@ -6,6 +6,7 @@ import (
 	"os/exec"
 
 	"github.com/containers/image/v5/docker/reference"
+	yaml "gopkg.in/yaml.v3"
 )
 
 // Status summarizes the current worldview of the rpm-ostree daemon.
@@ -56,6 +57,24 @@ func (client *Client) newCmd(args ...string) *exec.Cmd {
 func (client *Client) run(args ...string) error {
 	c := client.newCmd(args...)
 	return c.Run()
+}
+
+// RpmOstreeVersion returns the running rpm-ostree version number
+func (client *Client) RpmOstreeVersion() (string, error) {
+	var q struct {
+		Version string `json:"version"`
+	}
+	c := client.newCmd("--version")
+	buf, err := c.Output()
+	if err != nil {
+		return "", err
+	}
+
+	if err := yaml.Unmarshal(buf, &q); err != nil {
+		return "", fmt.Errorf("failed to parse `rpm-ostree --version` output: %w", err)
+	}
+
+	return q.Version, nil
 }
 
 // QueryStatus loads the current system state.
