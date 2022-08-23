@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
+	"strconv"
+	"strings"
 
 	"github.com/containers/image/v5/docker/reference"
 	yaml "gopkg.in/yaml.v3"
@@ -75,6 +77,39 @@ func (client *Client) RpmOstreeVersion() (string, error) {
 	}
 
 	return q.Version, nil
+}
+
+func compareVersionStrings(required, actual string) (bool, error) {
+	verparts := strings.Split(actual, ".")
+	verlen := len(verparts)
+	requiredparts := strings.Split(required, ".")
+	for i, req := range requiredparts {
+		if i >= verlen {
+			break
+		}
+		reqv, err := strconv.Atoi(req)
+		if err != nil {
+			return false, err
+		}
+		actualv, err := strconv.Atoi(verparts[i])
+		if err != nil {
+			return false, err
+		}
+		if actualv < reqv {
+			return false, nil
+		}
+	}
+	return true, nil
+}
+
+// RpmOstreeVersionEqualOrGreater checks whether the version of rpm-ostree is new enough.
+func (client *Client) RpmOstreeVersionEqualOrGreater(required string) (bool, error) {
+	actual, err := client.RpmOstreeVersion()
+	if err != nil {
+		return false, err
+	}
+
+	return compareVersionStrings(required, actual)
 }
 
 // QueryStatus loads the current system state.
