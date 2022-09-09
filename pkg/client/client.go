@@ -61,7 +61,7 @@ func (client *Client) run(args ...string) error {
 	return c.Run()
 }
 
-/// VersionData represents the static information about rpm-ostree.
+// VersionData represents the static information about rpm-ostree.
 type VersionData struct {
 	Version  string   `json:"version"`
 	Features []string `json:"features"`
