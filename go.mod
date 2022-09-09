@@ -1,4 +1,4 @@
-module github.com/cgwalters/rpmostree-client-go
+module github.com/coreos/rpmostree-client-go
 
 go 1.17
 
