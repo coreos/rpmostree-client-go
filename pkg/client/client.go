@@ -25,6 +25,7 @@ type Deployment struct {
 	ID                      string   `json:"id"`
 	OSName                  string   `json:"osname"`
 	Serial                  int32    `json:"serial"`
+	BaseChecksum            *string  `json:"base-checksum"`
 	Checksum                string   `json:"checksum"`
 	Version                 string   `json:"version"`
 	Timestamp               uint64   `json:"timestamp"`
@@ -157,6 +158,14 @@ func (s *Status) GetStagedDeployment() *Deployment {
 		}
 	}
 	return nil
+}
+
+// GetBaseChecksum returns the ostree commit used as a base.
+func (s *Deployment) GetBaseChecksum() string {
+	if s.BaseChecksum != nil {
+		return *s.BaseChecksum
+	}
+	return s.Checksum
 }
 
 // Remove the pending deployment.
