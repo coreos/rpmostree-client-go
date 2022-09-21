@@ -63,8 +63,13 @@ func (client *Client) run(args ...string) error {
 
 // VersionData represents the static information about rpm-ostree.
 type VersionData struct {
-	Version  string   `json:"version"`
-	Features []string `json:"features"`
+	Version  string   `yaml:"Version"`
+	Features []string `yaml:"Features"`
+	Git      string   `yaml:"Git"`
+}
+
+type rpmOstreeVersionData struct {
+	Root VersionData `yaml:"rpm-ostree"`
 }
 
 // RpmOstreeVersion returns the running rpm-ostree version number
@@ -75,12 +80,12 @@ func (client *Client) RpmOstreeVersion() (*VersionData, error) {
 		return nil, err
 	}
 
-	var q VersionData
+	var q rpmOstreeVersionData
 	if err := yaml.Unmarshal(buf, &q); err != nil {
 		return nil, fmt.Errorf("failed to parse `rpm-ostree --version` output: %w", err)
 	}
 
-	return &q, nil
+	return &q.Root, nil
 }
 
 func compareVersionStrings(required, actual string) (bool, error) {
