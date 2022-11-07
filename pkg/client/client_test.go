@@ -86,6 +86,49 @@ func TestParseFcos(t *testing.T) {
 	assert.Equal(t, firstDeploy.ContainerImageReference, "ostree-unverified-registry:quay.io/fedora/fedora-coreos:testing-devel")
 }
 
+func TestParseDeploymentError(t *testing.T) {
+	nilCases := []string{"", "\n", `Started OSTree Finalize Staged Deployment.
+Stopping OSTree Finalize Staged Deployment...
+Finalizing staged deployment
+Copying /etc changes: 8 modified, 0 removed, 31 added
+Copying /etc changes: 8 modified, 0 removed, 31 added
+The --rebuild-if-modules-changed option is deprecated. Use --refresh instead.
+Bootloader updated; bootconfig swap: yes; bootversion: boot.0.1, deployment count change: 1
+Bootloader updated; bootconfig swap: yes; bootversion: boot.0.1, deployment count change: 1
+ostree-finalize-staged.service: Succeeded.
+Stopped OSTree Finalize Staged Deployment.
+	`}
+	for _, c := range nilCases {
+		e, err := parseDeploymentError(c)
+		if err != nil {
+			panic(err)
+		}
+		if e != nil {
+			panic("expected nil, found " + *e)
+		}
+	}
+	errCase := `Started OSTree Finalize Staged Deployment.
+Stopping OSTree Finalize Staged Deployment...
+Finalizing staged deployment
+Copying /etc changes: 8 modified, 0 removed, 27 added
+Copying /etc changes: 8 modified, 0 removed, 27 added
+error: mkdir(boot/loader.0): Operation not permitted
+ostree-finalize-staged.service: Control process exited, code=exited status=1
+ostree-finalize-staged.service: Failed with result 'exit-code'.
+Stopped OSTree Finalize Staged Deployment.
+`
+	e, err := parseDeploymentError(errCase)
+	if err != nil {
+		panic(err)
+	}
+	if e == nil {
+		panic("expected error")
+	}
+	if *e != "error: mkdir(boot/loader.0): Operation not permitted" {
+		panic("unexpected " + *e)
+	}
+}
+
 // Stubbed out tests below that depend on a running rpm-ostree system
 
 // func TestRpmOstreeVersion(t *testing.T) {
