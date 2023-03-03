@@ -13,7 +13,10 @@ import (
 var workstationFixture string
 
 //go:embed test-fixtures/fcos-container-status.json
-var fcosFixture string
+var fcosContainerFixture string
+
+//go:embed test-fixtures/fcos-with-overrides-status.json
+var fcosOverridesFixture string
 
 func TestNewClient(t *testing.T) {
 	c := NewClient("test")
@@ -66,12 +69,13 @@ func TestParseWorkstation(t *testing.T) {
 	assert.NotNil(t, booted)
 
 	assert.Equal(t, booted.GetBaseChecksum(), "229387d3c0bb8ad698228ca5702eca72aed8b298a7c800be1dc72bab160a9f7f")
+	assert.Equal(t, booted.RequestedPackages[0], "xsel")
 }
 
-func TestParseFcos(t *testing.T) {
+func TestParseFcosContainer(t *testing.T) {
 	var s Status
 
-	if err := json.Unmarshal([]byte(fcosFixture), &s); err != nil {
+	if err := json.Unmarshal([]byte(fcosContainerFixture), &s); err != nil {
 		panic(err)
 	}
 
@@ -84,6 +88,17 @@ func TestParseFcos(t *testing.T) {
 
 	firstDeploy := s.Deployments[0]
 	assert.Equal(t, firstDeploy.ContainerImageReference, "ostree-unverified-registry:quay.io/fedora/fedora-coreos:testing-devel")
+}
+
+func TestParseFcosWithOverrides(t *testing.T) {
+	var s Status
+
+	if err := json.Unmarshal([]byte(fcosOverridesFixture), &s); err != nil {
+		panic(err)
+	}
+
+	firstDeploy := s.Deployments[0]
+	assert.Equal(t, firstDeploy.RequestedBaseRemovals[0], "moby-engine")
 }
 
 func TestParseDeploymentError(t *testing.T) {
