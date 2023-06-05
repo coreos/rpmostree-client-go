@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/containers/image/v5 v5.25.0
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v3 v3.0.1
 )
 
