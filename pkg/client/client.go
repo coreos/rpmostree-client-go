@@ -238,12 +238,12 @@ func (client *Client) OverrideReset(toReset []string, toUninstall []string) erro
 
 // RebaseToContainerImage switches to the target container image
 func (client *Client) RebaseToContainerImage(target reference.Reference) error {
-	return client.run("rebase", "--experimental", fmt.Sprintf("ostree-image-signed:docker://%s", target.String()))
+	return client.run("rebase", fmt.Sprintf("ostree-image-signed:docker://%s", target.String()))
 }
 
 // RebaseToContainerImageAllowUnsigned switches to the target container image, ignoring lack of image signatures.
 func (client *Client) RebaseToContainerImageAllowUnsigned(target reference.Reference) error {
-	return client.run("rebase", "--experimental", fmt.Sprintf("ostree-unverified-registry:%s", target.String()))
+	return client.run("rebase", fmt.Sprintf("ostree-unverified-registry:%s", target.String()))
 }
 
 func parseDeploymentError(buf string) (*string, error) {
