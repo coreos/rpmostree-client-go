@@ -38,6 +38,7 @@ type Deployment struct {
 	ContainerImageReference string   `json:"container-image-reference"`
 	RequestedPackages       []string `json:"requested-packages"`
 	RequestedBaseRemovals   []string `json:"requested-base-removals"`
+	Unlocked                *string  `json:"unlocked"`
 }
 
 // Client is a handle for interacting with an rpm-ostree based system.
