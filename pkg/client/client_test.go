@@ -88,6 +88,10 @@ func TestParseFcosContainer(t *testing.T) {
 
 	firstDeploy := s.Deployments[0]
 	assert.Equal(t, firstDeploy.ContainerImageReference, "ostree-unverified-registry:quay.io/fedora/fedora-coreos:testing-devel")
+
+	ir, err := firstDeploy.RequireContainerImage()
+	assert.Nil(t, err)
+	assert.Equal(t, ir.Imgref.Image, "quay.io/fedora/fedora-coreos:testing-devel")
 }
 
 func TestParseFcosWithOverrides(t *testing.T) {
