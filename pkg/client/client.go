@@ -10,6 +10,8 @@ import (
 
 	"github.com/containers/image/v5/docker/reference"
 	yaml "gopkg.in/yaml.v3"
+
+	"github.com/coreos/rpmostree-client-go/pkg/imgref"
 )
 
 // Status summarizes the current worldview of the rpm-ostree daemon.
@@ -170,6 +172,14 @@ func (s *Deployment) GetBaseChecksum() string {
 		return *s.BaseChecksum
 	}
 	return s.Checksum
+}
+
+// Parse the deployment's container image reference.
+func (d *Deployment) RequireContainerImage() (*imgref.OstreeImageReference, error) {
+	if d.ContainerImageReference == "" {
+		return nil, fmt.Errorf("deployment is not using a container origin")
+	}
+	return imgref.Parse(d.ContainerImageReference)
 }
 
 // Remove the pending deployment.
