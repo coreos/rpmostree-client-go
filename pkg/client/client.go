@@ -25,24 +25,30 @@ type Status struct {
 
 // Deployment represents a bootable filesystem tree
 type Deployment struct {
-	ID                      string   `json:"id"`
-	OSName                  string   `json:"osname"`
-	Serial                  int32    `json:"serial"`
-	BaseChecksum            *string  `json:"base-checksum"`
-	Checksum                string   `json:"checksum"`
-	Version                 string   `json:"version"`
-	Timestamp               uint64   `json:"timestamp"`
-	Booted                  bool     `json:"booted"`
-	Staged                  bool     `json:"staged"`
-	LiveReplaced            string   `json:"live-replaced,omitempty"`
-	Origin                  string   `json:"origin"`
-	CustomOrigin            []string `json:"custom-origin"`
-	ContainerImageReference string   `json:"container-image-reference"`
-	RequestedPackages       []string `json:"requested-packages"`
-	RequestedBaseRemovals   []string `json:"requested-base-removals"`
-	Unlocked                *string  `json:"unlocked"`
-
-	BaseCommitMeta map[string]interface{} `json:"base-commit-meta"`
+	ID                                 string                 `json:"id"`
+	OSName                             string                 `json:"osname"`
+	Serial                             int32                  `json:"serial"`
+	BaseChecksum                       *string                `json:"base-checksum"`
+	Checksum                           string                 `json:"checksum"`
+	Version                            string                 `json:"version"`
+	Timestamp                          uint64                 `json:"timestamp"`
+	Booted                             bool                   `json:"booted"`
+	Pinned                             bool                   `json:"pinned"`
+	RegenerateInitramfs                bool                   `json:"regenerate-initramfs"`
+	Staged                             bool                   `json:"staged"`
+	LiveReplaced                       string                 `json:"live-replaced,omitempty"`
+	Origin                             string                 `json:"origin"`
+	CustomOrigin                       []string               `json:"custom-origin"`
+	ContainerImageReference            string                 `json:"container-image-reference"`
+	Packages                           []string               `json:"packages"`
+	RequestedPackages                  []string               `json:"requested-packages"`
+	RequestedLocalPackages             []string               `json:"requested-local-packages"`
+	RequestedBaseRemovals              []string               `json:"requested-base-removals"`
+	RequestedBaseLocalReplacements     []interface{}          `json:"requested-base-local-replacements"`
+	RequestedLocalFileOverridePackages []string               `json:"requested-local-file-override-packages"`
+	BaseLocalReplacements              []interface{}          `json:"base-local-replacements"`
+	Unlocked                           string                 `json:"unlocked"`
+	BaseCommitMeta                     map[string]interface{} `json:"base-commit-meta"`
 }
 
 // Client is a handle for interacting with an rpm-ostree based system.
