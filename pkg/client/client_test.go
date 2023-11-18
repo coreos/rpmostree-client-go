@@ -103,6 +103,12 @@ func TestParseFcosWithOverrides(t *testing.T) {
 
 	firstDeploy := s.Deployments[0]
 	assert.Equal(t, firstDeploy.RequestedBaseRemovals[0], "moby-engine")
+
+	stream, ok := s.Deployments[0].BaseCommitMeta["fedora-coreos.stream"]
+	if !ok {
+		t.Error("Missing stream")
+	}
+	assert.Equal(t, stream, "stable")
 }
 
 func TestParseDeploymentError(t *testing.T) {
