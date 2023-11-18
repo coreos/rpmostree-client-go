@@ -41,6 +41,8 @@ type Deployment struct {
 	RequestedPackages       []string `json:"requested-packages"`
 	RequestedBaseRemovals   []string `json:"requested-base-removals"`
 	Unlocked                *string  `json:"unlocked"`
+
+	BaseCommitMeta map[string]interface{} `json:"base-commit-meta"`
 }
 
 // Client is a handle for interacting with an rpm-ostree based system.
