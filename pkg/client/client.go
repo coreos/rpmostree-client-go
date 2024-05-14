@@ -175,6 +175,17 @@ func (s *Status) GetStagedDeployment() *Deployment {
 	return nil
 }
 
+// GetRollbackDeployment finds the rollback deployment, or returns nil if none is found.
+func (s *Status) GetRollbackDeployment() *Deployment {
+	for num := range s.Deployments {
+		deployment := s.Deployments[num]
+		if !deployment.Booted && !deployment.Staged {
+			return &deployment
+		}
+	}
+	return nil
+}
+
 // GetBaseChecksum returns the ostree commit used as a base.
 func (s *Deployment) GetBaseChecksum() string {
 	if s.BaseChecksum != nil {
