@@ -40,6 +40,7 @@ type Deployment struct {
 	Origin                             string                 `json:"origin"`
 	CustomOrigin                       []string               `json:"custom-origin"`
 	ContainerImageReference            string                 `json:"container-image-reference"`
+	ContainerImageReferenceDigest      string                 `json:"container-image-reference-digest"`
 	Packages                           []string               `json:"packages"`
 	RequestedPackages                  []string               `json:"requested-packages"`
 	RequestedLocalPackages             []string               `json:"requested-local-packages"`
